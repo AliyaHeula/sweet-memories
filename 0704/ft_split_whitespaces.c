@@ -26,7 +26,7 @@ char	**ft_split_whitespaces(char *str)
 			if((i - 1) == -1 || str[i - 1] == ' ' || str[i - 1] == '\t' || str[i - 1] == '\n') 
 			{
 				strchar[k++] = &str[i];
-//для проверки адресов				
+//to follow addresses:				
 //				printf ("%p\n", &str[i]);
 //				printf ("%s\n", &str[i]);
 			}
