@@ -8,6 +8,8 @@ int	main(int ac, char **av)
 		ft_putnbr(eval_expr(av[1]));
 		ft_putchar('\n');
 	}
+	if (ac == 1)
+		write (1, "enter argument\n", 15);
 	return (0);
 }
 
@@ -15,7 +17,7 @@ void	ft_putnbr(int nb)
 {
 	if (nb == -2147483648)
 	{
-		write (1, "-", 1);
+		write (1, "-2", 2);
 		nb = 147483648;
 	}
 	if (nb < 0)
