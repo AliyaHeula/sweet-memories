@@ -11,6 +11,7 @@ int	eval_expr(char *str)
 	stacks_creation(str);
 	read_write(str);
 	printf("%s\n", g_ops);
+	printf("g_nums_sum to see zero= %d\n", g_nums[i]);
 	while (g_nums[i])
 		printf("%d\n", g_nums[i++]);
 	return (7);
@@ -46,13 +47,73 @@ void	read_write(char *str)
 
 	i = 0;
 	j = 0;
-	k = -1;
-	while (str[++k] != '\0')
+	k = 0;
+	while (str[k] != '\0')
 	{
 		if (str[k] >= '0' && str[k] <= '9')
-			g_nums[i++] = str[k] - '0';
+		{
+			k += ft_evalatoi(&str[k], i);
+			i++;
+		}
+		// WARNING!!! Dalshe mozhno slomat' glaza!
+		// Indusskiy kod, Alilluya!
 		if (str[k] == '+' || str[k] == '-' || str[k] == '*' || str[k] == '/' || str[k] == '%'
 			|| str[k] == '(' || str[k] == ')')
-			g_ops[j++] = str[k];
+		{
+			if (((str[k] == '+' || str[k] == '-') && str[k - 1] != '(') ||
+			((str[k] == '%'|| str[k] == '*' || str[k] == '/') && (str[k - 1] == '+'
+				|| str[k - 1] == '-' || str[k - 1] == '(')) ||
+			(str[k] == '(' || j == 0))
+				g_ops[j] = str[k];
+			if (str[k] == ')')
+			{
+				while (g_ops[j - 1] != '(')
+				{
+					calculator ((i - 1), (j - 1));
+					j--;
+				}
+			}
+			j++;
+			printf ("g_ops = %s\n", g_ops);
+		}
+		k++;
 	}
+}
+
+int	ft_evalatoi(char *str, int i)
+{// to implement negative numbers solution
+	int k;
+	int number;
+	int power;
+
+	k = 0;
+	number = 0;
+	power = 1;
+	while (str[k] >= '0' && str[k] <= '9')
+		k++;
+	while (k-- > 1)
+		power *= 10;
+	while (str[k] >= '0' && str[k] <= '9')
+	{
+		number += (str[k] - '0') * power;
+		k++;
+		power /= 10;
+	}
+	g_nums[i] = number;
+	return (k);
+
+}
+
+void	calculator (int i, int j)
+{
+	if (g_ops[j] == '+')
+		g_nums[i - 1] = g_nums[i - 1] + g_nums[i];
+	if (g_ops[j] == '-')
+		g_nums[i - 1] = g_nums[i - 1] - g_nums[i];
+	if (g_ops[j] == '*')
+		g_nums[i - 1] = g_nums[i - 1] * g_nums[i];
+	if (g_ops[j] == '/')
+		g_nums[i - 1] = g_nums[i - 1] / g_nums[i];
+	if (g_ops[j] == '%')	
+		g_nums[i - 1] = g_nums[i - 1] % g_nums[i];
 }

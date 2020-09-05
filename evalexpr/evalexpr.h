@@ -12,5 +12,7 @@ void	ft_putchar(char c);
 void	ft_putnbr(int nb);
 void	stacks_creation(char *str);
 void	read_write(char *str);
+int	ft_evalatoi(char *str, int i);
+void	calculator (int i, int j);
 
 #endif
