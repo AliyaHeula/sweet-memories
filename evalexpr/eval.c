@@ -53,6 +53,15 @@ void	read_write(char *str)
 		if (str[k] >= '0' && str[k] <= '9')
 		{
 			k += ft_evalatoi(&str[k], i);
+			printf("k = %d\n", k);
+//			printf("str[k]= %s\n", &str[k]);
+			printf("i = %d\n", i);
+			printf("j = %d\n", j);
+			if (str[k + 1] == '\0')
+			{
+				printf("%s\n", "here");
+				calculator((i), (j - 1)); 
+			}
 			i++;
 		}
 		// WARNING!!! Dalshe mozhno slomat' glaza!
@@ -60,14 +69,15 @@ void	read_write(char *str)
 		if (str[k] == '+' || str[k] == '-' || str[k] == '*' || str[k] == '/' || str[k] == '%'
 			|| str[k] == '(' || str[k] == ')')
 		{
-			if (((str[k] == '+' || str[k] == '-') && str[k - 1] != '(') ||
-			((str[k] == '%'|| str[k] == '*' || str[k] == '/') && (str[k - 1] == '+'
-				|| str[k - 1] == '-' || str[k - 1] == '(')) ||
+			if (((str[k] == '+' || str[k] == '-') && (str[k - 1] != '+' && str[k - 1] !='-')) 
+					||// ((str[k] == '%'|| str[k] == '*' || str[k] == '/') && (str[k - 1] == '+'
+//				|| str[k - 1] == '-' || str[k - 1] == '(')) ||
 			(str[k] == '(' || j == 0))
 				g_ops[j] = str[k];
-			if (str[k] == ')')
+			//if (str[k] == ')')
+			else
 			{
-				while (g_ops[j - 1] != '(')
+				while (g_ops[j] != '(' || j != 0)
 				{
 					calculator ((i - 1), (j - 1));
 					j--;
@@ -76,6 +86,12 @@ void	read_write(char *str)
 			j++;
 			printf ("g_ops = %s\n", g_ops);
 		}
+		/*else
+		{
+			printf ("%s\n","simbols haven't been recognized");
+			continue;
+		}*/
+	
 		k++;
 	}
 }
@@ -100,7 +116,7 @@ int	ft_evalatoi(char *str, int i)
 		power /= 10;
 	}
 	g_nums[i] = number;
-	return (k);
+	return (k - 1);
 
 }
 
