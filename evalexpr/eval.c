@@ -10,10 +10,10 @@ int	eval_expr(char *str)
 	i = 0;	
 	stacks_creation(str);
 	read_write(str);
-	printf("%s\n", g_ops);
-	printf("g_nums_sum to see zero= %d\n", g_nums[i]);
-	while (g_nums[i])
-		printf("%d\n", g_nums[i++]);
+//	printf("%s\n", g_ops);
+	printf("RESULT = %d\n", g_nums[i]);
+//	while (g_nums[i])
+//		printf("%d\n", g_nums[i++]);LL
 	return (7);
 }
 
@@ -45,54 +45,73 @@ void	read_write(char *str)
 	int j;
 	int k;
 
-	i = 0;
-	j = 0;
+	i = -1;
+	j = -1;
 	k = 0;
 	while (str[k] != '\0')
 	{
-		if (str[k] >= '0' && str[k] <= '9')
-		{
-			k += ft_evalatoi(&str[k], i);
-			printf("k = %d\n", k);
-//			printf("str[k]= %s\n", &str[k]);
-			printf("i = %d\n", i);
-			printf("j = %d\n", j);
-			if (str[k + 1] == '\0')
-			{
-				printf("%s\n", "here");
-				calculator((i), (j - 1)); 
-			}
-			i++;
-		}
+			printf("kkkk = %d\n", k);
 		// WARNING!!! Dalshe mozhno slomat' glaza!
 		// Indusskiy kod, Alilluya!
-		if (str[k] == '+' || str[k] == '-' || str[k] == '*' || str[k] == '/' || str[k] == '%'
+		while (str[k] == '+' || str[k] == '-' || str[k] == '*' || str[k] == '/' || str[k] == '%'
 			|| str[k] == '(' || str[k] == ')')
 		{
-			if (((str[k] == '+' || str[k] == '-') && (str[k - 1] != '+' && str[k - 1] !='-')) 
-					||// ((str[k] == '%'|| str[k] == '*' || str[k] == '/') && (str[k - 1] == '+'
-//				|| str[k - 1] == '-' || str[k - 1] == '(')) ||
-			(str[k] == '(' || j == 0))
+			if ((str[k] == '(' || str[k - 1] == '(' || j == -1) ||
+			((str[k] == '+' || str[k] == '-') && (g_ops[j] == '(')) || 
+			((str[k] == '%'|| str[k] == '*' || str[k] == '/') && (g_ops[j] == '+'
+				|| g_ops[j] == '-' || g_ops[j] == '(')))
+		
+			{
+				j++;
 				g_ops[j] = str[k];
+				printf("write.g_ops[%d] calc = %s\n", j, &g_ops[j]);
+				k++;
+			}
 			//if (str[k] == ')')
 			else
 			{
-				while (g_ops[j] != '(' || j != 0)
+				if ((str[k] == ')' && g_ops[j] != '(') || j >= 0)
 				{
-					calculator ((i - 1), (j - 1));
+					printf(".k = %d\n", k);
+					printf("1.g_nums[%d] calc = %d\n",i, g_nums[i]);
+					printf("2.g_nums[%d] calc = %d\n",(i - 1), g_nums[i - 1]);
+					printf("3.g_ops[%d] calc = %s\n", j, &g_ops[j]);
+					calculator ((i), (j));
 					j--;
+					i--;
+				//	printf("%s\n", "calculation");
+				}
+				if (g_ops[j] == '(' && str[k] == ')')
+				{
+					j--;
+					k++;
 				}
 			}
-			j++;
-			printf ("g_ops = %s\n", g_ops);
+
 		}
-		/*else
+		if (str[k] >= '0' && str[k] <= '9')
 		{
-			printf ("%s\n","simbols haven't been recognized");
+			i++;
+			k += ft_evalatoi(&str[k], i);
+//			printf("k = %d\n", k);
+//			printf("str[k]= %s\n", &str[k]);
+//			printf("i = %d\n", i);
+//			printf("j = %d\n", j);
+			printf("write.g_nums[%d] calc = %d\n",i, g_nums[i]);
+		}
+		if (str[k] == ' ')
+		{
+			k++;
+//			printf("else = (");
+		}
+		if (str[k] == '\0')
+		{
+//			printf("%s\n", "here");
+			calculator((i), (j)); 
+//			printf("g_nums = %d\n", g_nums[i]);
+//			printf("g_ops = %s\n", &g_ops[j]);
 			continue;
-		}*/
-	
-		k++;
+		}
 	}
 }
 
@@ -116,7 +135,7 @@ int	ft_evalatoi(char *str, int i)
 		power /= 10;
 	}
 	g_nums[i] = number;
-	return (k - 1);
+	return (k);
 
 }
 
