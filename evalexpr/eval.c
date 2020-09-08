@@ -81,7 +81,8 @@ void	read_write(char *str)
 			k++;
 		if (str[k] == '\0')
 		{
-			calculator((i), (j)); 
+			while (i > 0)
+				calculator((i--), (j--)); 
 			continue;
 		}
 	}
