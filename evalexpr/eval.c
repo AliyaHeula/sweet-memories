@@ -5,16 +5,14 @@
 
 int	eval_expr(char *str)
 {
-	int i;
+	int result;
 
-	i = 0;	
 	stacks_creation(str);
 	read_write(str);
-//	printf("%s\n", g_ops);
-	printf("RESULT = %d\n", g_nums[i]);
-//	while (g_nums[i])
-//		printf("%d\n", g_nums[i++]);LL
-	return (7);
+	result = g_nums[0];
+	free(g_nums);
+	free(g_ops);
+	return (result);
 }
 
 void stacks_creation (char *str)
@@ -34,7 +32,6 @@ void stacks_creation (char *str)
 			c++;
 		i++;
 	}
-	printf("n = %d\nc = %d\n", n, c);
 	g_nums = (int *)malloc(sizeof(int) * n);
 	g_ops = (char *)malloc(sizeof(char) * c + 1);
 }
@@ -50,80 +47,62 @@ void	read_write(char *str)
 	k = 0;
 	while (str[k] != '\0')
 	{
-			printf("kkkk = %d\n", k);
 		// WARNING!!! Dalshe mozhno slomat' glaza!
 		// Indusskiy kod, Alilluya!
-		while (str[k] == '+' || str[k] == '-' || str[k] == '*' || str[k] == '/' || str[k] == '%'
-			|| str[k] == '(' || str[k] == ')')
+		if ((str[k] == '-' && k == 0) || (str[k] == '-' && str[k - 1] == '(') ||
+		(str[k] >= '0' && str[k] <= '9'))
+			k += ft_evalatoi(&str[k], ++i);
+		while (str[k] == '+' || str[k] == '-' || str[k] == '*' || str[k] == '/' ||
+		str[k] == '%' || str[k] == '(' || str[k] == ')')
 		{
 			if ((str[k] == '(' || str[k - 1] == '(' || j == -1) ||
 			((str[k] == '+' || str[k] == '-') && (g_ops[j] == '(')) || 
 			((str[k] == '%'|| str[k] == '*' || str[k] == '/') && (g_ops[j] == '+'
 				|| g_ops[j] == '-' || g_ops[j] == '(')))
-		
 			{
-				j++;
-				g_ops[j] = str[k];
-				printf("write.g_ops[%d] calc = %s\n", j, &g_ops[j]);
-				k++;
+				g_ops[++j] = str[k++];
 			}
-			//if (str[k] == ')')
 			else
 			{
 				if ((str[k] == ')' && g_ops[j] != '(') || j >= 0)
-				{
-					printf(".k = %d\n", k);
-					printf("1.g_nums[%d] calc = %d\n",i, g_nums[i]);
-					printf("2.g_nums[%d] calc = %d\n",(i - 1), g_nums[i - 1]);
-					printf("3.g_ops[%d] calc = %s\n", j, &g_ops[j]);
-					calculator ((i), (j));
-					j--;
-					i--;
-				//	printf("%s\n", "calculation");
-				}
+					calculator ((i--), (j--));
 				if (g_ops[j] == '(' && str[k] == ')')
 				{
 					j--;
 					k++;
 				}
 			}
-
-		}
-		if (str[k] >= '0' && str[k] <= '9')
-		{
-			i++;
-			k += ft_evalatoi(&str[k], i);
-//			printf("k = %d\n", k);
-//			printf("str[k]= %s\n", &str[k]);
-//			printf("i = %d\n", i);
-//			printf("j = %d\n", j);
-			printf("write.g_nums[%d] calc = %d\n",i, g_nums[i]);
+			if (str[k] == '-' && str[k - 1] == '(')
+			{	j--;
+				break;
+			}	
 		}
 		if (str[k] == ' ')
-		{
 			k++;
-//			printf("else = (");
-		}
 		if (str[k] == '\0')
 		{
-//			printf("%s\n", "here");
 			calculator((i), (j)); 
-//			printf("g_nums = %d\n", g_nums[i]);
-//			printf("g_ops = %s\n", &g_ops[j]);
 			continue;
 		}
 	}
 }
 
 int	ft_evalatoi(char *str, int i)
-{// to implement negative numbers solution
+{
 	int k;
 	int number;
 	int power;
+	int minus;
 
 	k = 0;
 	number = 0;
 	power = 1;
+	minus = 1;
+	if (str[k] == '-')
+	{
+		k++;
+		minus = -1;
+	}
 	while (str[k] >= '0' && str[k] <= '9')
 		k++;
 	while (k-- > 1)
@@ -134,7 +113,7 @@ int	ft_evalatoi(char *str, int i)
 		k++;
 		power /= 10;
 	}
-	g_nums[i] = number;
+	g_nums[i] = number * minus;
 	return (k);
 
 }
